@@ -9,7 +9,6 @@ import (
 	proposaltypes "github.com/cosmos/cosmos-sdk/x/params/types/proposal"
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
 	tmctypes "github.com/tendermint/tendermint/rpc/core/types"
 
 	"google.golang.org/grpc/codes"
@@ -18,7 +17,8 @@ import (
 
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
 
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	gov "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 func (m *Module) UpdateProposal(height int64, blockTime time.Time, id uint64) error {
@@ -101,10 +101,10 @@ func (m *Module) handleParamChangeProposal(height int64, paramChangeProposal *pr
 			if err != nil {
 				return fmt.Errorf("error while updating ParamChangeProposal %s params : %s", distrtypes.ModuleName, err)
 			}
-		case govtypes.ModuleName:
+		case gov.ModuleName:
 			err = m.UpdateParams(height)
 			if err != nil {
-				return fmt.Errorf("error while updating ParamChangeProposal %s params : %s", govtypes.ModuleName, err)
+				return fmt.Errorf("error while updating ParamChangeProposal %s params : %s", gov.ModuleName, err)
 			}
 		case minttypes.ModuleName:
 			err = m.mintModule.UpdateParams(height)
@@ -278,7 +278,7 @@ func (m *Module) handlePassedProposal(proposal govtypes.Proposal, height int64) 
 
 	// Unpack proposal
 	var content govtypes.Content
-	err := m.db.EncodingConfig.Marshaler.UnpackAny(proposal.Content, &content)
+	err := m.db.EncodingConfig.Codec.UnpackAny(proposal.Content, &content)
 	if err != nil {
 		return fmt.Errorf("error while handling ParamChangeProposal: %s", err)
 	}
@@ -291,19 +291,19 @@ func (m *Module) handlePassedProposal(proposal govtypes.Proposal, height int64) 
 			return fmt.Errorf("error while updating params from ParamChangeProposal: %s", err)
 		}
 
-	case *upgradetypes.SoftwareUpgradeProposal:
-		// Store software upgrade plan while SoftwareUpgradeProposal passed
-		err = m.db.SaveSoftwareUpgradePlan(proposal.ProposalId, p.Plan, height)
-		if err != nil {
-			return fmt.Errorf("error while storing software upgrade plan: %s", err)
-		}
+		//case *upgradetypes.SoftwareUpgradeProposal:
+		//	// Store software upgrade plan while SoftwareUpgradeProposal passed
+		//	err = m.db.SaveSoftwareUpgradePlan(proposal.ProposalId, p.Plan, height)
+		//	if err != nil {
+		//		return fmt.Errorf("error while storing software upgrade plan: %s", err)
+		//	}
 
-	case *upgradetypes.CancelSoftwareUpgradeProposal:
-		// Delete software upgrade plan while CancelSoftwareUpgradeProposal passed
-		err = m.db.DeleteSoftwareUpgradePlan(proposal.ProposalId)
-		if err != nil {
-			return fmt.Errorf("error while deleting software upgrade plan: %s", err)
-		}
+		//case *upgradetypes.CancelSoftwareUpgradeProposal:
+		//	// Delete software upgrade plan while CancelSoftwareUpgradeProposal passed
+		//	err = m.db.DeleteSoftwareUpgradePlan(proposal.ProposalId)
+		//	if err != nil {
+		//		return fmt.Errorf("error while deleting software upgrade plan: %s", err)
+		//	}
 	}
 	return nil
 }

@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.4
-	github.com/cosmos/gaia/v7 v7.0.2
+	github.com/cosmos/gaia/v8 v8.0.0-rc
 	github.com/forbole/juno/v3 v3.4.0
 	github.com/go-co-op/gocron v1.18.0
 	github.com/gogo/protobuf v1.3.3
@@ -37,7 +37,6 @@ require (
 	github.com/cosmos/go-bip39 v1.0.0 // indirect
 	github.com/cosmos/gorocksdb v1.2.0 // indirect
 	github.com/cosmos/iavl v0.17.3 // indirect
-	github.com/cosmos/ibc-go/v3 v3.0.0 // indirect
 	github.com/cosmos/ledger-cosmos-go v0.11.1 // indirect
 	github.com/cosmos/ledger-go v0.9.2 // indirect
 	github.com/danieljoos/wincred v1.0.2 // indirect
@@ -127,8 +126,11 @@ require (
 )
 
 replace (
+	//google.golang.org/grpc => google.golang.org/grpc v1.33.2
+	//github.com/forbole/juno/v3 => github.com/forcodedancing/juno/v3@e6b3c8550f522740027f54afe0677fa6b8424507
+	github.com/cosmos/cosmos-sdk => github.com/bnb-chain/inscription-cosmos-sdk v0.0.2-0.20221226030232-b9169c2815cf
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/tendermint/tendermint => github.com/forbole/tendermint v0.34.13-0.20210820072129-a2a4af55563d
-	google.golang.org/grpc => google.golang.org/grpc v1.33.2
-
 )
+
+replace github.com/forbole/juno/v3 => github.com/forcodedancing/juno/v4 e6b3c8550f522740027f54afe0677fa6b8424507

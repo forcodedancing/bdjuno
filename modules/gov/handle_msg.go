@@ -2,14 +2,14 @@ package gov
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
-	"strconv"
-
+	govtypes2 "github.com/cosmos/cosmos-sdk/x/gov/types"
 	"github.com/forbole/bdjuno/v3/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	juno "github.com/forbole/juno/v3/types"
 )
 
@@ -36,12 +36,12 @@ func (m *Module) HandleMsg(index int, msg sdk.Msg, tx *juno.Tx) error {
 // handleMsgSubmitProposal allows to properly handle a handleMsgSubmitProposal
 func (m *Module) handleMsgSubmitProposal(tx *juno.Tx, index int, msg *govtypes.MsgSubmitProposal) error {
 	// Get the proposal id
-	event, err := tx.FindEventByType(index, govtypes.EventTypeSubmitProposal)
+	event, err := tx.FindEventByType(index, govtypes2.EventTypeSubmitProposal)
 	if err != nil {
 		return fmt.Errorf("error while searching for EventTypeSubmitProposal: %s", err)
 	}
 
-	id, err := tx.FindAttributeByKey(event, govtypes.AttributeKeyProposalID)
+	id, err := tx.FindAttributeByKey(event, govtypes2.AttributeKeyProposalID)
 	if err != nil {
 		return fmt.Errorf("error while searching for AttributeKeyProposalID: %s", err)
 	}

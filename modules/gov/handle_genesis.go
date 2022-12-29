@@ -8,7 +8,8 @@ import (
 
 	"github.com/forbole/bdjuno/v3/types"
 
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes2 "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	"github.com/rs/zerolog/log"
 )
 
@@ -18,7 +19,7 @@ func (m *Module) HandleGenesis(doc *tmtypes.GenesisDoc, appState map[string]json
 
 	// Read the genesis state
 	var genState govtypes.GenesisState
-	err := m.cdc.UnmarshalJSON(appState[govtypes.ModuleName], &genState)
+	err := m.cdc.UnmarshalJSON(appState[govtypes2.ModuleName], &genState)
 	if err != nil {
 		return fmt.Errorf("error while reading gov genesis data: %s", err)
 	}

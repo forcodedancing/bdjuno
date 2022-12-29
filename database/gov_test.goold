@@ -13,7 +13,7 @@ import (
 	"github.com/forbole/bdjuno/v3/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 
 	dbtypes "github.com/forbole/bdjuno/v3/database/types"
 )
@@ -104,7 +104,7 @@ func (suite *DbTestSuite) encodeProposalContent(content govtypes.Content) string
 	anyContent, err := codectypes.NewAnyWithValue(protoContent)
 	suite.Require().NoError(err)
 
-	contentBz, err := suite.database.EncodingConfig.Marshaler.MarshalJSON(anyContent)
+	contentBz, err := suite.database.EncodingConfig.Codec.MarshalJSON(anyContent)
 	suite.Require().NoError(err)
 
 	return string(contentBz)
