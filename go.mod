@@ -189,5 +189,6 @@ replace (
 	github.com/tendermint/tendermint => github.com/bnb-chain/inscription-tendermint v0.34.25-0.20221220071916-c8af7bf22b25
 )
 
-replace github.com/forbole/juno/v4 => /Users/liguo/go/src/github.com/fcd/juno
-replace github.com/cosmos/gaia/v8 => /Users/liguo/go/src/github.com/fcd/gaia
+replace github.com/forbole/juno/v4 => ../juno
+
+replace github.com/cosmos/gaia/v8 => ../gaia

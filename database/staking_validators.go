@@ -99,7 +99,7 @@ func (db *Db) GetValidatorConsensusAddress(address string) (sdk.ConsAddress, err
 		return nil, fmt.Errorf("cannot find the consensus address of validator having operator address %s", address)
 	}
 
-	return sdk.ConsAddressFromBech32(result[0])
+	return sdk.ConsAddressFromHex(result[0])
 }
 
 // GetValidatorOperatorAddress returns the operator address of the validator having the given consensus address
