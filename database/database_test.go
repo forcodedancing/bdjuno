@@ -9,15 +9,15 @@ import (
 	"testing"
 	"time"
 
-	dbconfig "github.com/forbole/juno/v3/database/config"
-	"github.com/forbole/juno/v3/logging"
+	dbconfig "github.com/forbole/juno/v4/database/config"
+	"github.com/forbole/juno/v4/logging"
 
-	junodb "github.com/forbole/juno/v3/database"
+	junodb "github.com/forbole/juno/v4/database"
 
-	"github.com/forbole/bdjuno/v3/database"
-	"github.com/forbole/bdjuno/v3/types"
+	"github.com/forbole/bdjuno/v4/database"
+	"github.com/forbole/bdjuno/v4/types"
 
-	juno "github.com/forbole/juno/v3/types"
+	juno "github.com/forbole/juno/v4/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	tmversion "github.com/tendermint/tendermint/proto/tendermint/version"
@@ -46,12 +46,6 @@ func (suite *DbTestSuite) SetupTest() {
 
 	// Build the database
 	dbCfg := dbconfig.NewDatabaseConfig(
-		"bdjuno",
-		"localhost",
-		6433,
-		"bdjuno",
-		"password",
-		"",
 		"public",
 		-1,
 		-1,
@@ -61,15 +55,15 @@ func (suite *DbTestSuite) SetupTest() {
 	db, err := database.Builder(junodb.NewContext(dbCfg, &codec, logging.DefaultLogger()))
 	suite.Require().NoError(err)
 
-	bigDipperDb, ok := (db).(*database.Db)
+	bigDipperdb, ok := (db).(*database.Db)
 	suite.Require().True(ok)
 
 	// Delete the public schema
-	_, err = bigDipperDb.Sql.Exec(`DROP SCHEMA public CASCADE;`)
+	_, err = bigDipperdb.Sqlx.Exec(`DROP SCHEMA public CASCADE;`)
 	suite.Require().NoError(err)
 
 	// Re-create the schema
-	_, err = bigDipperDb.Sql.Exec(`CREATE SCHEMA public;`)
+	_, err = bigDipperdb.Sqlx.Exec(`CREATE SCHEMA public;`)
 	suite.Require().NoError(err)
 
 	dirPath := path.Join(".", "schema")
@@ -83,12 +77,12 @@ func (suite *DbTestSuite) SetupTest() {
 		commentsRegExp := regexp.MustCompile(`/\*.*\*/`)
 		requests := strings.Split(string(file), ";")
 		for _, request := range requests {
-			_, err := bigDipperDb.Sql.Exec(commentsRegExp.ReplaceAllString(request, ""))
+			_, err := bigDipperdb.Sqlx.Exec(commentsRegExp.ReplaceAllString(request, ""))
 			suite.Require().NoError(err)
 		}
 	}
 
-	suite.database = bigDipperDb
+	suite.database = bigDipperdb
 }
 
 // getBlock builds, stores and returns a block for the provided height
@@ -166,7 +160,7 @@ func (suite *DbTestSuite) getAccount(addr string) sdk.AccAddress {
 	delegator, err := sdk.AccAddressFromBech32(addr)
 	suite.Require().NoError(err)
 
-	_, err = suite.database.Sql.Exec(`INSERT INTO account (address) VALUES ($1) ON CONFLICT DO NOTHING`, delegator.String())
+	_, err = suite.database.Sqlx.Exec(`INSERT INTO account (address) VALUES ($1) ON CONFLICT DO NOTHING`, delegator.String())
 	suite.Require().NoError(err)
 
 	return delegator

@@ -4,23 +4,22 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/forbole/bdjuno/v3/modules/actions"
+	"github.com/forbole/bdjuno/v4/modules/actions"
 
-	parsecmdtypes "github.com/forbole/juno/v3/cmd/parse/types"
+	parsecmdtypes "github.com/forbole/juno/v4/cmd/parse/types"
 
 	"gopkg.in/yaml.v3"
 
-	junov3 "github.com/forbole/juno/v3/cmd/migrate/v3"
-	"github.com/forbole/juno/v3/types/config"
+	"github.com/forbole/juno/v4/types/config"
 )
 
 // RunMigration runs the migrations from v2 to v3
 func RunMigration(parseConfig *parsecmdtypes.Config) error {
 	// Run Juno migration
-	err := junov3.RunMigration(parseConfig)
-	if err != nil {
-		return err
-	}
+	//err := junov3.RunMigration(parseConfig)
+	//if err != nil {
+	//	return err
+	//}
 
 	// Migrate the config
 	cfg, err := migrateConfig()
